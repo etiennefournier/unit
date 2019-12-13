@@ -1,8 +1,11 @@
 #include <gtest/gtest.h>
 #include "../measures.h"
+#include "../measures_metric.h"
+#include "../measures_imperial.h"
 
 using namespace measures;
 using namespace measures::metric;
+using namespace measures::imperial;
 
 // construction
 // comparison

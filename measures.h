@@ -1,3 +1,6 @@
+#ifndef MEASURES__H
+#define MEASURES__H
+
 #include <limits>
 #include <ratio>
 
@@ -74,37 +77,19 @@ namespace measures
 			? _To(static_cast<_ToRep>(static_cast<_CommonRep>(dist.count()) / static_cast<_CommonRep>(_CommonFactor::den)))
 			: _To(static_cast<_ToRep>(static_cast<_CommonRep>(dist.count()) * static_cast<_CommonRep>(_CommonFactor::num) / static_cast<_CommonRep>(_CommonFactor::den))));        
         }
-
-
-    namespace metric
-    {
-        // ratios
-        // using ratios defines in ratio header
-
-        // aliases
-        //using micrometer = ;
-        using millimeters = distance<unsigned long long, std::milli>;
-        using meters = distance<unsigned long long>;
-
-        constexpr meters operator ""_m(unsigned long long m)
-        {
-            return meters(m);
-        }
-    }
-
-    namespace imperial
-    {
-        // ratios
-        using inches_in_feet = std::ratio<1, 12>;
-        using foots_in_yard = std::ratio<1, 3>;
-        
-        //12 inches = 1 foot
-		//3 feet = 1 yard
-		//220 yards = 1 furlong
-		//8 furlongs = 1 mile
-		//5280 feet = 1 mile
-		//1760 yards = 1 mile
-
-        //aliases
-    }
 }
+
+// namespace std
+// {
+//     using namespace measures;
+
+//     template<class _Rep1, class _Dimension1, class _Rep2, class _Dimension2>
+//     struct common_type<distance<_Rep1, _Dimension1>, distance<_Rep2, _Dimension2>>
+//     {
+// 	    using type = distance<typename common_type<_Rep1, _Rep2>::type,
+// 		    std::ratio<std::_Gdc<_Dimension1::num, _Dimension2::num>::value,
+// 		_Lcm<_Dimension1::den, _Dimension2::den>::value>>;
+//     };
+// }
+
+#endif // MEASURES_METRIC_H
