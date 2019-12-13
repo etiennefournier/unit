@@ -6,12 +6,13 @@
 
 namespace measures
 {
-    template<class _Rep, class _Dimension = std::ratio<1>>
+    template<class _Tag, class _Rep, class _Dimension = std::ratio<1>>
     class distance
     {
         using _MyT = distance<_Rep, _Dimension>;
         
         public:
+        using tag = _Tag;
         using rep = _Rep;
         using dimension = _Dimension;
                 
@@ -44,25 +45,24 @@ namespace measures
 	// {	// tests for distance
 	// };
 
-	template<class _Rep1,
-	class _Dimension1,
-	class _Rep2,
-	class _Dimension2> inline
+	template<
+    class _Tag1, class _Rep1, class _Dimension1,
+	class _Tag2, class _Rep2, class _Dimension2> inline
 		constexpr bool operator == (
-			const distance<_Rep1, _Dimension1>& _Left,
-			const distance<_Rep2, _Dimension2>& _Right)
+			const distance<_Tag1, _Rep1, _Dimension1>& _Left,
+			const distance<_Tag2, _Rep2, _Dimension2>& _Right)
 	{	// test if dimension == dimension
 		using _CT = typename std::common_type <
-			distance<_Rep1, _Dimension1>,
-			distance<_Rep2, _Dimension2 >> ::type;
+			distance<_Tag1, _Rep1, _Dimension1>,
+			distance<_Tag2, _Rep2, _Dimension2 >> ::type;
 		return (_CT(_Left).count() == _CT(_Right).count());
 	}
 
-    template<class _To, class _Rep, class _Dimension>
+    template<class _To, class _Tag, class _Rep, class _Dimension>
     constexpr
     // typename std::enable_if<_Is_distance<_To>::value,
 	// _To>::type
-    _To distance_cast(const distance<_Rep, _Dimension>& dist)
+    _To distance_cast(const distance<_Tag, _Rep, _Dimension>& dist)
     {
 		using _CommonFactor = std::ratio_divide<_Dimension, typename _To::dimension>;
 

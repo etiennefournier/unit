@@ -5,14 +5,17 @@
 
 namespace measures::metric
 {
+    // tag
+    struct metric_tag{};
+
     // ratios
     // using ratios defines in ratio header
 
     // aliases
-    using nanometers = distance<unsigned long long, std::nano>;
-    using micrometers = distance<unsigned long long, std::micro>;
-    using millimeters = distance<unsigned long long, std::milli>;
-    using meters = distance<unsigned long long>;
+    using nanometers  = distance<metric_tag, unsigned long long, std::nano>;
+    using micrometers = distance<metric_tag, unsigned long long, std::micro>;
+    using millimeters = distance<metric_tag, unsigned long long, std::milli>;
+    using meters = distance<metric_tag, unsigned long long>;
 
     constexpr meters operator""_m(unsigned long long m)
     {
