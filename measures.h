@@ -6,10 +6,28 @@
 
 namespace measures
 {
-    template<class _Tag, class _Rep, class _Dimension = std::ratio<1>>
+    // distance_cast keeps complaining about not knowing distance class.
+    template<class _Tag, class _Rep,
+	class _Dimension = std::ratio < 1 >>
+	class distance;
+
+
+    // Pour des tags de système identique, on veut la représentation commune et 
+    // le greatest common divison pour la dimension.
+    // Pour des tags différents, même chose pour la représentation,
+    // mais à travailler pour la dimension. 
+
+    // forward declare to use in distance constructor.
+    template<class _To, class _Tag, class _Rep, class _Dimension>
+    constexpr
+    // typename std::enable_if<_Is_distance<_To>::value,
+	// _To>::type
+    _To distance_cast(const distance<_Tag, _Rep, _Dimension>& dist);
+
+    template<class _Tag, class _Rep, class _Dimension>
     class distance
     {
-        using _MyT = distance<_Rep, _Dimension>;
+        using _MyT = distance<_Tag, _Rep, _Dimension>;
         
         public:
         using tag = _Tag;
@@ -20,6 +38,12 @@ namespace measures
         constexpr distance() = default;
         constexpr explicit distance(const _Rep& rep)
         : m_Rep(rep)
+        {
+        }
+
+        template<class _Rep2, class _Dimension2>
+        constexpr distance(const distance<_Tag, _Rep2, _Dimension2>& dist)
+        : m_Rep(distance_cast<distance>(dist).count())
         {
         }
 
@@ -55,6 +79,9 @@ namespace measures
 		using _CT = typename std::common_type <
 			distance<_Tag1, _Rep1, _Dimension1>,
 			distance<_Tag2, _Rep2, _Dimension2 >> ::type;
+            // auto a = _CT(_Left).count();
+            // auto b = _CT(_Right).count();
+            // return a == b;
 		return (_CT(_Left).count() == _CT(_Right).count());
 	}
 
@@ -76,20 +103,18 @@ namespace measures
 			: _CommonFactor::num == 1 && _CommonFactor::den != 1
 			? _To(static_cast<_ToRep>(static_cast<_CommonRep>(dist.count()) / static_cast<_CommonRep>(_CommonFactor::den)))
 			: _To(static_cast<_ToRep>(static_cast<_CommonRep>(dist.count()) * static_cast<_CommonRep>(_CommonFactor::num) / static_cast<_CommonRep>(_CommonFactor::den))));        
-        }
+    }
 }
 
-// namespace std
-// {
-//     using namespace measures;
-
-//     template<class _Rep1, class _Dimension1, class _Rep2, class _Dimension2>
-//     struct common_type<distance<_Rep1, _Dimension1>, distance<_Rep2, _Dimension2>>
-//     {
-// 	    using type = distance<typename common_type<_Rep1, _Rep2>::type,
-// 		    std::ratio<std::_Gdc<_Dimension1::num, _Dimension2::num>::value,
-// 		_Lcm<_Dimension1::den, _Dimension2::den>::value>>;
-//     };
-// }
+namespace std
+{
+    template<class _Tag1, class _Rep1, class _Dimension1, class _Tag2, class _Rep2, class _Dimension2>
+    struct common_type<measures::distance<_Tag1, _Rep1, _Dimension1>, measures::distance<_Tag2, _Rep2, _Dimension2>>
+    {
+	    using type = measures::distance<_Tag1, typename common_type<_Rep1, _Rep2>::type,
+		    ratio< __static_gcd<_Dimension1::num, _Dimension2::num>::value,
+		 __static_lcm<_Dimension1::den, _Dimension2::den>::value>>;
+    };
+}
 
 #endif // MEASURES_METRIC_H

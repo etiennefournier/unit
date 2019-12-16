@@ -23,6 +23,18 @@ TEST(measures, SimpleMetricUnitsCreation)
     EXPECT_EQ(mm, millimeters(1000));
 }
 
+TEST(measures, Comparisons)
+{
+
+    constexpr auto um = micrometers(91400);
+    constexpr auto mm = millimeters(1000);
+    constexpr auto m  = meters(1);
+    
+    // constexpr auto y = yards(1);
+
+    EXPECT_EQ(m, mm);
+}
+
 #include <chrono>
 
 TEST(chrono, TestChrono)
