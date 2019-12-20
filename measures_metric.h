@@ -15,7 +15,7 @@ namespace measures::metric
     using nanometers  = distance<metric_tag, unsigned long long, std::nano>;
     using micrometers = distance<metric_tag, unsigned long long, std::micro>;
     using millimeters = distance<metric_tag, unsigned long long, std::milli>;
-    using meters = distance<metric_tag, unsigned long long>;
+    using meters      = distance<metric_tag, unsigned long long>;
 
     constexpr meters operator""_m(unsigned long long m)
     {

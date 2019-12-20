@@ -23,23 +23,23 @@ TEST(measures, SimpleMetricUnitsCreation)
     EXPECT_EQ(mm, millimeters(1000));
 }
 
-TEST(measures, Comparisons)
+TEST(measures, MetricComparisons)
 {
 
     constexpr auto um = micrometers(91400);
     constexpr auto mm = millimeters(1000);
     constexpr auto m  = meters(1);
     
-    // constexpr auto y = yards(1);
-
     EXPECT_EQ(m, mm);
 }
 
-#include <chrono>
-
-TEST(chrono, TestChrono)
+TEST(measures, ImperialComparisons)
 {
-    constexpr auto m = std::chrono::minutes(60);
-    constexpr auto h = std::chrono::hours(1);
-    EXPECT_EQ(m, h);
+    EXPECT_EQ(thous(1000), inches(1));
+    EXPECT_EQ(inches(12), feet(1));
+    EXPECT_EQ(feet(3), yards(1));
+    EXPECT_EQ(yards(22), chains(1));
+    EXPECT_EQ(chains(10), furlongs(1));
+    EXPECT_EQ(furlongs(8), miles(1));
+    EXPECT_EQ(miles(3), leagues(1));
 }

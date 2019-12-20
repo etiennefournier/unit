@@ -3,6 +3,8 @@
 #include "../playground_imperial.h"
 #include "../playground_metric_conversion.h"
 
+#include <chrono>
+
 using namespace playground;
 
 TEST(Playground, Tests)
@@ -15,4 +17,11 @@ TEST(Playground, Tests)
 
     // EXPECT_EQ(i, m);
     EXPECT_EQ(m, i);
+}
+
+TEST(chrono, TestChrono)
+{
+    constexpr auto m = std::chrono::minutes(60);
+    constexpr auto h = std::chrono::hours(1);
+    EXPECT_EQ(m, h);
 }
