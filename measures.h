@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <ratio>
+#include <type_traits>
 
 namespace measures
 {
@@ -75,14 +76,15 @@ namespace measures
 		constexpr bool operator == (
 			const distance<_Tag1, _Rep1, _Dimension1>& _Left,
 			const distance<_Tag2, _Rep2, _Dimension2>& _Right)
-	{	// test if dimension == dimension
-		using _CT = typename std::common_type <
-			distance<_Tag1, _Rep1, _Dimension1>,
-			distance<_Tag2, _Rep2, _Dimension2 >> ::type;
-            // auto a = _CT(_Left).count();
-            // auto b = _CT(_Right).count();
-            // return a == b;
-		return (_CT(_Left).count() == _CT(_Right).count());
+	{
+        static_assert(std::is_same_v<_Tag1, _Tag2>, 
+        "Trying to compare two distances of differents systems. Comparison needs to be defined!");
+
+        using _CT = typename std::common_type<
+        distance<_Tag1, _Rep1, _Dimension1>,
+        distance<_Tag2, _Rep2, _Dimension2 >>::type;
+
+        return (_CT(_Left).count() == _CT(_Right).count());            
 	}
 
     template<class _To, class _Tag, class _Rep, class _Dimension>
@@ -103,6 +105,50 @@ namespace measures
 			: _CommonFactor::num == 1 && _CommonFactor::den != 1
 			? _To(static_cast<_ToRep>(static_cast<_CommonRep>(dist.count()) / static_cast<_CommonRep>(_CommonFactor::den)))
 			: _To(static_cast<_ToRep>(static_cast<_CommonRep>(dist.count()) * static_cast<_CommonRep>(_CommonFactor::num) / static_cast<_CommonRep>(_CommonFactor::den))));        
+    }
+
+    // distance /
+
+    template<class _Distance, class _Rep, bool = false/*__is_distance<_Rep>::value*/>
+    struct __distance_divide_result
+    {
+    };
+ 
+    template<class _Distance, class _Rep2,
+    bool = std::is_convertible_v<_Rep2, typename std::common_type<typename _Distance::rep, _Rep2>::type>>
+    struct __distance_divide_imp
+    {
+    }; 
+
+    template<class _Tag, class _Rep1, class _Dimension, class _Rep2>
+    struct __distance_divide_imp<distance<_Tag, _Rep1, _Dimension>, _Rep2, true>
+    {
+        using type = distance<_Tag, typename std::common_type<_Rep1, _Rep2>::type, _Dimension>;
+    };
+
+    template<class _Tag, class _Rep1, class _Dimension, class _Rep2>
+    struct __distance_divide_result<distance<_Tag, _Rep1, _Dimension>, _Rep2> :
+    __distance_divide_imp<distance<_Tag, _Rep1, _Dimension>, _Rep2>
+    {
+    };
+
+    template<class _Tag, class _Rep1, class _Dimension, class _Rep2>
+    inline constexpr
+    typename __distance_divide_result<distance<_Tag, _Rep1, _Dimension>, _Rep2>::type
+    operator / (const distance<_Tag, _Rep1, _Dimension>& _dist, const _Rep2& _s)
+    {
+        using _Cr = typename std::common_type<_Rep1, _Rep2>::type;
+        using _Cd = distance<_Tag, _Cr, _Dimension>;
+        return _Cd(_Cd(_dist).count()/static_cast<_Cr>(_s));
+    }
+
+    template<class _Tag, class _Rep1, class _Dimension1, class _Rep2, class _Dimension2>
+    inline constexpr
+    typename std::common_type<_Rep1, _Rep2>::type
+    operator / (const distance<_Tag, _Rep1, _Dimension1>& _lhs, const distance<_Tag, _Rep2, _Dimension2>& _rhs)
+    {
+        using _Ct = typename std::common_type<distance<_Tag, _Rep1, _Dimension1>, distance<_Tag, _Rep2, _Dimension2>>::type;
+        return _Ct(_lhs).count() / _Ct(_rhs).count();
     }
 }
 

@@ -18,16 +18,16 @@ namespace measures::imperial
     using miles_in_league   = std::ratio<3, 1>;
 
     //aliases
-    using yards    = distance<imperial_tag, unsigned long long>;
+    using yards    = distance<imperial_tag, long long>;
 
-    using feet     = distance<imperial_tag, unsigned long long, std::ratio_divide<yards::dimension , feet_in_yard>>;
-    using inches   = distance<imperial_tag, unsigned long long, std::ratio_divide<feet::dimension  , inches_in_foot>>;
-    using thous    = distance<imperial_tag, unsigned long long, std::ratio_divide<inches::dimension, thous_in_inch>>;
+    using feet     = distance<imperial_tag, long long, std::ratio_divide<yards::dimension , feet_in_yard>>;
+    using inches   = distance<imperial_tag, long long, std::ratio_divide<feet::dimension  , inches_in_foot>>;
+    using thous    = distance<imperial_tag, long long, std::ratio_divide<inches::dimension, thous_in_inch>>;
   
-    using chains   = distance<imperial_tag, unsigned long long, std::ratio_multiply<yards::dimension   , yards_in_chain>>;
-    using furlongs = distance<imperial_tag, unsigned long long, std::ratio_multiply<chains::dimension  , chains_in_furlong>>;
-    using miles    = distance<imperial_tag, unsigned long long, std::ratio_multiply<furlongs::dimension, furlongs_in_mile>>;
-    using leagues  = distance<imperial_tag, unsigned long long, std::ratio_multiply<miles::dimension   , miles_in_league>>;
+    using chains   = distance<imperial_tag, long long, std::ratio_multiply<yards::dimension   , yards_in_chain>>;
+    using furlongs = distance<imperial_tag, long long, std::ratio_multiply<chains::dimension  , chains_in_furlong>>;
+    using miles    = distance<imperial_tag, long long, std::ratio_multiply<furlongs::dimension, furlongs_in_mile>>;
+    using leagues  = distance<imperial_tag, long long, std::ratio_multiply<miles::dimension   , miles_in_league>>;
 } // namespace imperial
 
 #endif // MEASURES_IMPERIAL_H

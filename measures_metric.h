@@ -1,6 +1,7 @@
 #ifndef MEASURES_METRIC_H
 #define MEASURES_METRIC_H
 
+#include <iostream>
 #include "measures.h"
 
 namespace measures::metric
@@ -12,14 +13,19 @@ namespace measures::metric
     // using ratios defines in ratio header
 
     // aliases
-    using nanometers  = distance<metric_tag, unsigned long long, std::nano>;
-    using micrometers = distance<metric_tag, unsigned long long, std::micro>;
-    using millimeters = distance<metric_tag, unsigned long long, std::milli>;
-    using meters      = distance<metric_tag, unsigned long long>;
+    using nanometers  = distance<metric_tag, long long, std::nano>;
+    using micrometers = distance<metric_tag, long long, std::micro>;
+    using millimeters = distance<metric_tag, long long, std::milli>;
+    using meters      = distance<metric_tag, long long>;
 
     constexpr meters operator""_m(unsigned long long m)
     {
-        return meters(m);
+        return meters(static_cast<meters::rep>(m));
+    }
+
+    std::ostream& operator<<(std::ostream& os, const meters& m)
+    {
+            return os << m.count() << " meters";
     }
 } // namespace metric
 

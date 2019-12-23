@@ -2,6 +2,7 @@
 #include "../measures.h"
 #include "../measures_metric.h"
 #include "../measures_imperial.h"
+#include "../measures_metric_conversion.h"
 
 using namespace measures;
 using namespace measures::metric;
@@ -42,4 +43,10 @@ TEST(measures, ImperialComparisons)
     EXPECT_EQ(chains(10), furlongs(1));
     EXPECT_EQ(furlongs(8), miles(1));
     EXPECT_EQ(miles(3), leagues(1));
+}
+
+TEST(measures, MetricToImperialComparisons)
+{
+     EXPECT_EQ(thous(5),  micrometers(127));
+     EXPECT_EQ(thous(10), micrometers(254));
 }
