@@ -34,6 +34,21 @@ TEST(measures, MetricComparisons)
     EXPECT_EQ(m, mm);
 }
 
+TEST(measures, MetricArithmetic)
+{
+    auto m = meters(1);
+    auto m2 = ++m;
+    EXPECT_EQ(meters(1) + meters(1), meters(2));
+    EXPECT_EQ(meters(10) - meters(5), meters(5));
+    // EXPECT_EQ(meters(10) * meters(5), meters(50));
+    // EXPECT_EQ(meters(10) / meters(5), meters(2));
+    EXPECT_EQ(m2, meters(2));
+    // EXPECT_EQ(++m, 2);
+    // EXPECT_EQ(--m, 1);
+    // EXPECT_EQ(m+=10, 11);
+    // EXPECT_EQ(m-=m2, 9);
+}
+
 TEST(measures, ImperialComparisons)
 {
     EXPECT_EQ(thous(1000), inches(1));

@@ -55,7 +55,49 @@ namespace measures
 
         private:
         _Rep m_Rep;
+
+        public:
+        // arithmetic
+
+        constexpr typename std::common_type<distance>::type operator+() const {return typename std::common_type<distance>::type(*this);}
+        constexpr typename std::common_type<distance>::type operator-() const {return typename std::common_type<distance>::type(-m_Rep);}
+        constexpr distance& operator++()      {++m_Rep; return *this;}
+        constexpr distance  operator++(int)   {return distance(m_Rep++);}
+        constexpr distance& operator--()      {--m_Rep; return *this;}
+        constexpr distance  operator--(int)   {return distance(m_Rep--);}
+
+        constexpr distance& operator+=(const distance& __d) {m_Rep += __d.count(); return *this;}
+        constexpr distance& operator-=(const distance& __d) {m_Rep -= __d.count(); return *this;}
+
+        constexpr distance& operator*=(const rep& rhs) {m_Rep *= rhs; return *this;}
+        constexpr distance& operator/=(const rep& rhs) {m_Rep /= rhs; return *this;}
+        constexpr distance& operator%=(const rep& rhs) {m_Rep %= rhs; return *this;}
+        constexpr distance& operator%=(const distance& rhs) {m_Rep %= rhs.count(); return *this;}
+
     };
+
+
+// Distance +
+
+template <class _Tag1, class _Rep1, class _Period1, class _Tag2, class _Rep2, class _Period2>
+inline constexpr
+typename std::common_type<distance<_Tag1, _Rep1, _Period1>, distance<_Tag2, _Rep2, _Period2> >::type
+operator+(const distance<_Tag1, _Rep1, _Period1>& __lhs, const distance<_Tag2, _Rep2, _Period2>& __rhs)
+{
+    using _Cd = typename std::common_type<distance<_Tag1, _Rep1, _Period1>, distance<_Tag2, _Rep2, _Period2> >::type;
+    return _Cd(_Cd(__lhs).count() + _Cd(__rhs).count());
+}
+
+// Distance -
+
+template <class _Tag1, class _Rep1, class _Period1, class _Tag2, class _Rep2, class _Period2>
+inline constexpr
+typename std::common_type<distance<_Tag1, _Rep1, _Period1>, distance<_Tag2, _Rep2, _Period2> >::type
+operator-(const distance<_Tag1, _Rep1, _Period1>& __lhs, const distance<_Tag2, _Rep2, _Period2>& __rhs)
+{
+    using _Cd = typename std::common_type<distance<_Tag1, _Rep1, _Period1>, distance<_Tag2, _Rep2, _Period2> >::type;
+    return _Cd(_Cd(__lhs).count() - _Cd(__rhs).count());
+}
 
     // template<class _Ty>
 	// struct _Is_distance
