@@ -239,6 +239,7 @@ class _LIBCPP_TEMPLATE_VIS __unit
     };
 
 public:
+    typedef _Sys system;
     typedef _Rep rep;
     typedef typename _Dimension::type dimension;
 private:
