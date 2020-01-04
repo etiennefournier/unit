@@ -331,13 +331,29 @@ struct __unit_eq<_LhsDuration, _LhsDuration>
         {return __lhs.count() == __rhs.count();}
 };
 
+template <class _Sys, class _Rep1, class _Dimension1, class _Rep2, class _Dimension2>
+inline _LIBCPP_INLINE_VISIBILITY
+_LIBCPP_CONSTEXPR
+bool
+operator==(const __unit<_Sys, _Rep1, _Dimension1>& __lhs, const __unit<_Sys, _Rep2, _Dimension2>& __rhs)
+{
+    return __unit_eq<__unit<_Sys, _Rep1, _Dimension1>, __unit<_Sys, _Rep2, _Dimension2> >()(__lhs, __rhs);
+}
+
+// Comparing wto units of the same system works by casting left and right arguments to their common type
+// and comparing their count.
+// Comparison between two differents systems won't have a common type, hence the need to implement
+// the logic in the equality operator.
+
+// TODO: Check if we can move some calculation to compile time by using a common type that would use the ratio between two systems.
+
 template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 bool
 operator==(const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
 {
-    return __unit_eq<__unit<_Sys1, _Rep1, _Dimension1>, __unit<_Sys2, _Rep2, _Dimension2> >()(__lhs, __rhs);
+    return __lhs == unit_cast<__unit<_Sys1, _Rep1, _Dimension1> >(__rhs);
 }
 
 // Unit !=

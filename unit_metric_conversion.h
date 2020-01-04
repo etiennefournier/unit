@@ -24,11 +24,6 @@ using thous_in_micrometers = ratio<5, 127>;
 
 // TODO see what needs to be done to support other flavors of num and den equality (last 2 templated arguments).
 
-    // auto um = micrometers(127);
-    // auto ts = unit_cast<thous>(um);
-
-    // EXPECT_EQ(ts.count(), 5);
-
 template <class _RepFrom, class _DimensionFrom, class _RepTo, class _DimensionTo, class _Dimension>
 struct __unit_cast<metric_unit<_RepFrom, _DimensionFrom>, imperial_unit<_RepTo, _DimensionTo>, _Dimension, false, false>
 {
@@ -54,31 +49,6 @@ struct __unit_cast<imperial_unit<_RepFrom, _DimensionFrom>, metric_unit<_RepTo, 
         return unit_cast<metric_unit<_RepTo, _DimensionTo> >(refUnitTo);
     }
 };
-
-// Duration equality operator works by casting left and right arguments to their common type
-// and comparing their count.
-// Comparison between two differents systems won't have a common type, hence the need to implement
-// the logic in the equality operator.
-
-// TODO 1: Bing able to find a common type that would use the right ratio for the calculation would be ideal.
-// TODO 2: Find a way to move this piece of code into unit.h by specializing for different systems
-template <
-    class _Rep1, class _Dimension1,
-    class _Rep2, class _Dimension2>
-inline constexpr bool operator==(
-    const imperial_unit<_Rep1, _Dimension1> &_Left, const metric_unit<_Rep2, _Dimension2> &_Right)
-{
-        return _Left == unit_cast<imperial_unit<_Rep1, _Dimension1> >(_Right);
-}
-
-template <
-    class _Rep1, class _Dimension1,
-    class _Rep2, class _Dimension2>
-inline constexpr bool operator==(
-    const metric_unit<_Rep1, _Dimension1> &_Left, const imperial_unit<_Rep2, _Dimension2> &_Right)
-{
-        return _Right == _Left;
-}
 
 } // namespace unit
 
