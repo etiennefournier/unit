@@ -4,6 +4,7 @@ set(This test_measures)
 
 set(Sources
     tests.cpp
+    tests_unit.cpp
     tests_playground.cpp
 )
 
