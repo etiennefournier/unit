@@ -50,3 +50,41 @@ TEST(unit, MetricToImperialComparisons)
      EXPECT_EQ(thous(5),  micrometers(127));
      EXPECT_EQ(thous(10), micrometers(254));
 }
+
+TEST(unit, UnitCastsMetric)
+{
+    auto um = micrometers(123456);
+    auto nm = unit_cast<nanometers>(um);
+    EXPECT_EQ(um, nm);
+
+    auto mm = unit_cast<millimeters>(um);
+    EXPECT_EQ(mm.count(), 123);
+}
+
+TEST(unit, UnitCastsImperial)
+{
+    auto y = yards(50);
+    auto th = unit_cast<thous>(y); // 1,800,000
+    EXPECT_EQ(y, th);
+
+    auto c = unit_cast<chains>(y); // 2
+    EXPECT_EQ(c.count(), 2); 
+}
+
+TEST(unit, UnitCastMetricToImperial)
+{
+    auto um = micrometers(127*2);
+    auto ts = unit_cast<thous>(um);
+
+    EXPECT_EQ(ts.count(), 5*2);
+    EXPECT_EQ(ts, um);
+}
+
+TEST(unit, UnitCastImperialToMetric)
+{
+    auto ts = thous(5*3);
+    auto um = unit_cast<micrometers>(ts);
+
+    EXPECT_EQ(um.count(), 127*3);
+    EXPECT_EQ(um, ts);
+}
