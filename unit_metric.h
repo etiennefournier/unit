@@ -31,17 +31,18 @@ namespace unit
     using nanometers  = metric_unit<long long, std::nano>;
     using micrometers = metric_unit<long long, std::micro>;
     using millimeters = metric_unit<long long, std::milli>;
+    using centimeters = metric_unit<long long, std::centi>;
+    using decimeters  = metric_unit<long long, std::deci>;
     using meters      = metric_unit<long long>;
+    using kilometers  = metric_unit<long long, std::kilo>;
 
-    ostream& operator<<(ostream& os, const meters& m)
-    {
-        return os << m.count() << " meters";
-    }
-
-    ostream& operator<<(ostream& os, const millimeters& m)
-    {
-        return os << m.count() << " millimeters";
-    }    
+    ostream& operator<<(ostream& os, const nanometers& u)  { return os << u.count() << " nanometers";}
+    ostream& operator<<(ostream& os, const micrometers& u) { return os << u.count() << " micrometers";}
+    ostream& operator<<(ostream& os, const millimeters& u) { return os << u.count() << " millimeters";}
+    ostream& operator<<(ostream& os, const centimeters& u) { return os << u.count() << " centimeters";}
+    ostream& operator<<(ostream& os, const decimeters& u)  { return os << u.count() << " decimeters";}
+    ostream& operator<<(ostream& os, const meters& u)      { return os << u.count() << " meters";}
+    ostream& operator<<(ostream& os, const kilometers& u)  { return os << u.count() << " kilometers";}
 }
 
 
@@ -51,11 +52,13 @@ inline namespace literals
 {
   inline namespace unit_literals
   {
-
-    constexpr unit::meters operator""_m(unsigned long long m)
-    {
-        return unit::meters(static_cast<unit::meters::rep>(m));
-    }
+    constexpr unit::nanometers  operator""_nm(unsigned long long m){ return unit::nanometers(static_cast<unit::nanometers::rep>(m)); }
+    constexpr unit::micrometers operator""_um(unsigned long long m){ return unit::micrometers(static_cast<unit::micrometers::rep>(m)); }
+    constexpr unit::millimeters operator""_mm(unsigned long long m){ return unit::millimeters(static_cast<unit::millimeters::rep>(m)); }
+    constexpr unit::centimeters operator""_cm(unsigned long long m){ return unit::centimeters(static_cast<unit::centimeters::rep>(m)); }
+    constexpr unit::decimeters  operator""_dm(unsigned long long m){ return unit::decimeters(static_cast<unit::decimeters::rep>(m)); }
+    constexpr unit::meters      operator""_m (unsigned long long m){ return unit::meters(static_cast<unit::meters::rep>(m)); }
+    constexpr unit::kilometers  operator""_km(unsigned long long m){ return unit::kilometers(static_cast<unit::kilometers::rep>(m)); }
 }}
 
 // uncomment when bringing back into std namespace "_LIBCPP_END_NAMESPACE_STD"
