@@ -36,13 +36,13 @@ namespace unit
     using meters      = metric_unit<long long>;
     using kilometers  = metric_unit<long long, std::kilo>;
 
-    ostream& operator<<(ostream& os, const nanometers& u)  { return os << u.count() << " nanometers";}
-    ostream& operator<<(ostream& os, const micrometers& u) { return os << u.count() << " micrometers";}
-    ostream& operator<<(ostream& os, const millimeters& u) { return os << u.count() << " millimeters";}
-    ostream& operator<<(ostream& os, const centimeters& u) { return os << u.count() << " centimeters";}
-    ostream& operator<<(ostream& os, const decimeters& u)  { return os << u.count() << " decimeters";}
-    ostream& operator<<(ostream& os, const meters& u)      { return os << u.count() << " meters";}
-    ostream& operator<<(ostream& os, const kilometers& u)  { return os << u.count() << " kilometers";}
+    inline ostream& operator<<(ostream& os, const nanometers& u)  { return os << u.count() << " nanometers";}
+    inline ostream& operator<<(ostream& os, const micrometers& u) { return os << u.count() << " micrometers";}
+    inline ostream& operator<<(ostream& os, const millimeters& u) { return os << u.count() << " millimeters";}
+    inline ostream& operator<<(ostream& os, const centimeters& u) { return os << u.count() << " centimeters";}
+    inline ostream& operator<<(ostream& os, const decimeters& u)  { return os << u.count() << " decimeters";}
+    inline ostream& operator<<(ostream& os, const meters& u)      { return os << u.count() << " meters";}
+    inline ostream& operator<<(ostream& os, const kilometers& u)  { return os << u.count() << " kilometers";}
 }
 
 
