@@ -52,13 +52,13 @@ inline namespace literals
 {
   inline namespace unit_literals
   {
-    constexpr unit::nanometers  operator""_nm(unsigned long long m){ return unit::nanometers(static_cast<unit::nanometers::rep>(m)); }
-    constexpr unit::micrometers operator""_um(unsigned long long m){ return unit::micrometers(static_cast<unit::micrometers::rep>(m)); }
-    constexpr unit::millimeters operator""_mm(unsigned long long m){ return unit::millimeters(static_cast<unit::millimeters::rep>(m)); }
-    constexpr unit::centimeters operator""_cm(unsigned long long m){ return unit::centimeters(static_cast<unit::centimeters::rep>(m)); }
-    constexpr unit::decimeters  operator""_dm(unsigned long long m){ return unit::decimeters(static_cast<unit::decimeters::rep>(m)); }
-    constexpr unit::meters      operator""_m (unsigned long long m){ return unit::meters(static_cast<unit::meters::rep>(m)); }
-    constexpr unit::kilometers  operator""_km(unsigned long long m){ return unit::kilometers(static_cast<unit::kilometers::rep>(m)); }
+    constexpr unit::nanometers  operator""_nm(unsigned long long u){ return unit::nanometers(static_cast<unit::nanometers::rep>(u)); }
+    constexpr unit::micrometers operator""_um(unsigned long long u){ return unit::micrometers(static_cast<unit::micrometers::rep>(u)); }
+    constexpr unit::millimeters operator""_mm(unsigned long long u){ return unit::millimeters(static_cast<unit::millimeters::rep>(u)); }
+    constexpr unit::centimeters operator""_cm(unsigned long long u){ return unit::centimeters(static_cast<unit::centimeters::rep>(u)); }
+    constexpr unit::decimeters  operator""_dm(unsigned long long u){ return unit::decimeters(static_cast<unit::decimeters::rep>(u)); }
+    constexpr unit::meters      operator""_m (unsigned long long u){ return unit::meters(static_cast<unit::meters::rep>(u)); }
+    constexpr unit::kilometers  operator""_km(unsigned long long u){ return unit::kilometers(static_cast<unit::kilometers::rep>(u)); }
 }}
 
 // uncomment when bringing back into std namespace "_LIBCPP_END_NAMESPACE_STD"

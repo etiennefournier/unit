@@ -44,7 +44,40 @@ namespace unit
     using furlongs = imperial_unit<long long, std::ratio_multiply<chains::dimension  , chains_in_furlong>>;
     using miles    = imperial_unit<long long, std::ratio_multiply<furlongs::dimension, furlongs_in_mile>>;
     using leagues  = imperial_unit<long long, std::ratio_multiply<miles::dimension   , miles_in_league>>;
+
+    inline ostream& operator<<(ostream& os, const yards& u)  { return os << u.count() << " yards";}
+    inline ostream& operator<<(ostream& os, const feet& u) { return os << u.count() << " feet";}
+    inline ostream& operator<<(ostream& os, const inches& u) { return os << u.count() << " inches";}
+    inline ostream& operator<<(ostream& os, const thous& u) { return os << u.count() << " thous";}
+    inline ostream& operator<<(ostream& os, const chains& u)  { return os << u.count() << " chains";}
+    inline ostream& operator<<(ostream& os, const furlongs& u)      { return os << u.count() << " furlongs";}
+    inline ostream& operator<<(ostream& os, const miles& u)  { return os << u.count() << " miles";}
+    inline ostream& operator<<(ostream& os, const leagues& u)  { return os << u.count() << " leagues";}
 }
+
+
+#if _LIBCPP_STD_VER > 11
+// Suffixes for ...
+inline namespace literals
+{
+  inline namespace unit_literals
+  {
+    constexpr unit::yards    operator""_yard(unsigned long long u)   { return unit::yards(static_cast<unit::yards::rep>(u)); }
+    constexpr unit::feet     operator""_foot(unsigned long long u)   { return unit::feet(static_cast<unit::feet::rep>(u)); }
+    constexpr unit::inches   operator""_inch(unsigned long long u)   { return unit::inches(static_cast<unit::inches::rep>(u)); }
+    constexpr unit::thous    operator""_thou(unsigned long long u)   { return unit::thous(static_cast<unit::thous::rep>(u)); }
+    constexpr unit::chains   operator""_chain(unsigned long long u)  { return unit::chains(static_cast<unit::chains::rep>(u)); }
+    constexpr unit::furlongs operator""_furlong(unsigned long long u){ return unit::furlongs(static_cast<unit::furlongs::rep>(u)); }
+    constexpr unit::miles    operator""_mile(unsigned long long u)   { return unit::miles(static_cast<unit::miles::rep>(u)); }
+    constexpr unit::leagues  operator""_league(unsigned long long u) { return unit::leagues(static_cast<unit::leagues::rep>(u)); }
+}}
+
+// uncomment when bringing back into std namespace "_LIBCPP_END_NAMESPACE_STD"
+// namespace unit { // hoist the literals into namespace std::chrono
+//    using namespace literals::unit_literals;
+// }
+
+#endif
 
 // _LIBCPP_END_NAMESPACE_STD
 
