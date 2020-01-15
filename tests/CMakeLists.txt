@@ -5,6 +5,9 @@ set(This test_measures)
 set(Sources
     tests.cpp
     tests_unit.cpp
+    tests_unit_metric.cpp
+    tests_unit_imperial.cpp
+    tests_unit_conversions.cpp
     tests_playground.cpp
 )
 
