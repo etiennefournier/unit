@@ -317,7 +317,6 @@ struct __unit_eq
     bool operator()(const _LhsDuration& __lhs, const _RhsDuration& __rhs) const
         {
             typedef typename common_type<_LhsDuration, _RhsDuration>::type _Ct;
-            auto temp = _Ct{};
             return _Ct(__lhs).count() == _Ct(__rhs).count();
         }
 };
