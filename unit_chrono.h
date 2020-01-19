@@ -54,17 +54,17 @@ namespace unit
         typedef duration<     int, ratio_divide<years::period, ratio<12>>>           months;
         #endif
 
-        // inline ostream& operator<<(ostream& os, const nanoseconds& u)  { return os << u.count() << " nanoseconds";}
-        // inline ostream& operator<<(ostream& os, const microseconds& u) { return os << u.count() << " microseconds";}
-        // inline ostream& operator<<(ostream& os, const milliseconds& u) { return os << u.count() << " milliseconds";}
-        // inline ostream& operator<<(ostream& os, const seconds& u)      { return os << u.count() << " seconds";}
-        // inline ostream& operator<<(ostream& os, const minutes& u)      { return os << u.count() << " minutes";}
-        // inline ostream& operator<<(ostream& os, const hours& u)        { return os << u.count() << " hours";}
+        inline ostream& operator<<(ostream& os, const nanoseconds& u)  { return os << u.count() << " nanoseconds";}
+        inline ostream& operator<<(ostream& os, const microseconds& u) { return os << u.count() << " microseconds";}
+        inline ostream& operator<<(ostream& os, const milliseconds& u) { return os << u.count() << " milliseconds";}
+        inline ostream& operator<<(ostream& os, const seconds& u)      { return os << u.count() << " seconds";}
+        inline ostream& operator<<(ostream& os, const minutes& u)      { return os << u.count() << " minutes";}
+        inline ostream& operator<<(ostream& os, const hours& u)        { return os << u.count() << " hours";}
         #if _LIBCPP_STD_VER > 17
-        // inline ostream& operator<<(ostream& os, const days& u)   { return os << u.count() << " days";}
-        // inline ostream& operator<<(ostream& os, const weeks& u)  { return os << u.count() << " weeks";}
-        // inline ostream& operator<<(ostream& os, const years& u)  { return os << u.count() << " years";}
-        // inline ostream& operator<<(ostream& os, const months& u) { return os << u.count() << " months";}
+        inline ostream& operator<<(ostream& os, const days& u)   { return os << u.count() << " days";}
+        inline ostream& operator<<(ostream& os, const weeks& u)  { return os << u.count() << " weeks";}
+        inline ostream& operator<<(ostream& os, const years& u)  { return os << u.count() << " years";}
+        inline ostream& operator<<(ostream& os, const months& u) { return os << u.count() << " months";}
         #endif
     }
 }
