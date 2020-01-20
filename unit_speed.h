@@ -22,15 +22,10 @@
 
 namespace unit
 {
-   struct speed_trait{};
-
-   template <class _Rep, class _DimensionNum, class _DimensionDen>
-    class _LIBCPP_TEMPLATE_VIS speed_unit : public __unit<speed_trait, _Rep, _DimensionNum>
-    {
-        public:
-        typedef typename _DimensionNum::type dimensionNum;
-        typedef typename _DimensionDen::type dimensionDen;
-    };
+    struct speed_trait{};
+    
+    template<class _Rep, class _DimensionNum = ratio<1>, class _DimensionDen = ratio<1>>
+    using speed_unit = __unit<speed_trait, _Rep, _DimensionNum, _DimensionDen>;
 
     // ratios
 
@@ -43,9 +38,8 @@ namespace unit
     speed_unit<typename common_type<_Rep1, _Rep2>::type, _Dimension1, _Dimension2>
     operator/(const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
     {
-        // typedef typename common_type<__unit<_Sys1, _Rep1, _Dimension1>, __unit<_Sys2, _Rep2, _Dimension2> >::type _Ct;
-        // return _Ct(__lhs).count() / _Ct(__rhs).count();
-        return speed_unit<typename common_type<_Rep1, _Rep2>::type, _Dimension1, _Dimension2>{};
+        typedef typename common_type<_Rep1, _Rep2>::type _CommonRepType;
+        return speed_unit<_CommonRepType, _Dimension1, _Dimension2>{_CommonRepType(__lhs.count()) / _CommonRepType(__rhs.count())};
     }
 }
 

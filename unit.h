@@ -31,7 +31,7 @@ using namespace std;
 namespace unit
 {
 
-template <class _Sys, class _Rep, class _Dimension = ratio<1> > class _LIBCPP_TEMPLATE_VIS __unit;
+template <class _Sys, class _Rep, class _Dimension = ratio<1>, class _DimensionDen = ratio<1>  > class _LIBCPP_TEMPLATE_VIS __unit;
 
 template <class _Tp>
 struct __is_unit : false_type {};
@@ -201,7 +201,7 @@ round(const __unit<_Sys, _Rep, _Dimension>& __u)
 
 // unit
 
-template <class _Sys, class _Rep, class _Dimension>
+template <class _Sys, class _Rep, class _Dimension, class _DimensionDen>
 class _LIBCPP_TEMPLATE_VIS __unit
 {
     static_assert(!__is_unit<_Rep>::value, "A unit representation can not be a unit");
@@ -242,6 +242,8 @@ public:
     typedef _Sys system;
     typedef _Rep rep;
     typedef typename _Dimension::type dimension;
+    typedef typename _Dimension::type dimensionNum;
+    typedef typename _DimensionDen::type dimensionDen;
 private:
     rep __rep_;
 public:
