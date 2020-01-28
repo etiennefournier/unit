@@ -310,23 +310,23 @@ public:
 
 // Different system's types comparisons are defined in other header files.
 // Same System, different type
-template <class _LhsDuration, class _RhsDuration>
+template <class _LhsUnit, class _RhsUnit>
 struct __unit_eq
 {
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-    bool operator()(const _LhsDuration& __lhs, const _RhsDuration& __rhs) const
+    bool operator()(const _LhsUnit& __lhs, const _RhsUnit& __rhs) const
         {
-            typedef typename common_type<_LhsDuration, _RhsDuration>::type _Ct;
+            typedef typename common_type<_LhsUnit, _RhsUnit>::type _Ct;
             return _Ct(__lhs).count() == _Ct(__rhs).count();
         }
 };
 
 //Same type
-template <class _LhsDuration>
-struct __unit_eq<_LhsDuration, _LhsDuration>
+template <class _LhsUnit>
+struct __unit_eq<_LhsUnit, _LhsUnit>
 {
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-    bool operator()(const _LhsDuration& __lhs, const _LhsDuration& __rhs) const
+    bool operator()(const _LhsUnit& __lhs, const _LhsUnit& __rhs) const
         {return __lhs.count() == __rhs.count();}
 };
 
@@ -368,22 +368,22 @@ operator!=(const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _
 
 // Unit <
 
-template <class _LhsDuration, class _RhsDuration>
+template <class _LhsUnit, class _RhsUnit>
 struct __unit_lt
 {
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-    bool operator()(const _LhsDuration& __lhs, const _RhsDuration& __rhs) const
+    bool operator()(const _LhsUnit& __lhs, const _RhsUnit& __rhs) const
         {
-            typedef typename common_type<_LhsDuration, _RhsDuration>::type _Ct;
+            typedef typename common_type<_LhsUnit, _RhsUnit>::type _Ct;
             return _Ct(__lhs).count() < _Ct(__rhs).count();
         }
 };
 
-template <class _LhsDuration>
-struct __unit_lt<_LhsDuration, _LhsDuration>
+template <class _LhsUnit>
+struct __unit_lt<_LhsUnit, _LhsUnit>
 {
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-    bool operator()(const _LhsDuration& __lhs, const _LhsDuration& __rhs) const
+    bool operator()(const _LhsUnit& __lhs, const _LhsUnit& __rhs) const
         {return __lhs.count() < __rhs.count();}
 };
 
