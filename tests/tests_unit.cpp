@@ -9,6 +9,6 @@ struct test_trait{};
 
 TEST(unit, UnitSizeOf)
 {
-    EXPECT_EQ(sizeof(__unit<test_trait, long long>), sizeof(long long));
-    EXPECT_EQ(sizeof(__unit<test_trait, float>), sizeof(float));
+    EXPECT_EQ(sizeof(__unit<long long, test_trait>), sizeof(long long));
+    EXPECT_EQ(sizeof(__unit<float, test_trait>), sizeof(float));
 }

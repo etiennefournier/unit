@@ -25,7 +25,7 @@ namespace unit
     // ratios
     // using ratios defines in ratio header
     template<class _Rep, class _Dimension = ratio<1>>
-    using metric_unit = __unit<metric_trait, _Rep, _Dimension>;
+    using metric_unit = __unit<_Rep, metric_trait, _Dimension>;
 
     // aliases
     using nanometers  = metric_unit<long long, std::nano>;

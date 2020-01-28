@@ -25,7 +25,7 @@ namespace unit
 
         //aliases
         template<class _Rep, class _Dimension = ratio<1>>
-        using duration = __unit<duration_trait, _Rep, _Dimension>;
+        using duration = __unit<_Rep, duration_trait, _Dimension>;
 
         // Duration cast   
         template <class _ToUnit, class _Rep, class _Dimension>

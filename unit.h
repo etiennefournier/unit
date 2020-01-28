@@ -31,31 +31,31 @@ using namespace std;
 namespace unit
 {
 
-template <class _Sys, class _Rep, class _Dimension = ratio<1> > class _LIBCPP_TEMPLATE_VIS __unit;
+template <class _Rep, class _Sys, class _Dimension = ratio<1> > class _LIBCPP_TEMPLATE_VIS __unit;
 
 template <class _Tp>
 struct __is_unit : false_type {};
 
-template <class _Sys, class _Rep, class _Dimension>
-struct __is_unit<__unit<_Sys, _Rep, _Dimension> > : true_type  {};
+template <class _Rep, class _Sys, class _Dimension>
+struct __is_unit<__unit<_Rep, _Sys, _Dimension> > : true_type  {};
 
-template <class _Sys, class _Rep, class _Dimension>
-struct __is_unit<const __unit<_Sys, _Rep, _Dimension> > : true_type  {};
+template <class _Rep, class _Sys, class _Dimension>
+struct __is_unit<const __unit<_Rep, _Sys, _Dimension> > : true_type  {};
 
-template <class _Sys, class _Rep, class _Dimension>
-struct __is_unit<volatile __unit<_Sys, _Rep, _Dimension> > : true_type  {};
+template <class _Rep, class _Sys, class _Dimension>
+struct __is_unit<volatile __unit<_Rep, _Sys, _Dimension> > : true_type  {};
 
-template <class _Sys, class _Rep, class _Dimension>
-struct __is_unit<const volatile __unit<_Sys, _Rep, _Dimension> > : true_type  {};
+template <class _Rep, class _Sys, class _Dimension>
+struct __is_unit<const volatile __unit<_Rep, _Sys, _Dimension> > : true_type  {};
 
 } // unit
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
-struct _LIBCPP_TEMPLATE_VIS common_type<unit::__unit<_Sys1, _Rep1, _Dimension1>,
-                                         unit::__unit<_Sys2, _Rep2, _Dimension2> >
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
+struct _LIBCPP_TEMPLATE_VIS common_type<unit::__unit<_Rep1, _Sys1, _Dimension1>,
+                                         unit::__unit<_Rep2, _Sys2, _Dimension2> >
 {
-    typedef unit::__unit<_Sys1,
-                         typename common_type<_Rep1, _Rep2>::type,
+    typedef unit::__unit<typename common_type<_Rep1, _Rep2>::type,
+                         _Sys1,
                          typename __ratio_gcd<_Dimension1, _Dimension2>::type> type;
 };
 
@@ -116,7 +116,7 @@ struct __unit_cast<_FromUnit, _ToUnit, _Dimension, false, false>
     }
 };
 
-template <class _ToUnit, class _Sys, class _Rep, class _Dimension>
+template <class _ToUnit, class _Rep, class _Sys, class _Dimension>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 typename enable_if
@@ -124,9 +124,9 @@ typename enable_if
     __is_unit<_ToUnit>::value,
     _ToUnit
 >::type
-unit_cast(const __unit<_Sys, _Rep, _Dimension>& __fu)
+unit_cast(const __unit<_Rep, _Sys, _Dimension>& __fu)
 {
-    return __unit_cast<__unit<_Sys, _Rep, _Dimension>, _ToUnit>()(__fu);
+    return __unit_cast<__unit<_Rep, _Sys, _Dimension>, _ToUnit>()(__fu);
 }
 
 template <class _Rep>
@@ -148,14 +148,14 @@ public:
 };
 
 #if _LIBCPP_STD_VER > 14
-template <class _ToUnit, class _Sys, class _Rep, class _Dimension>
+template <class _ToUnit, class _Rep, class _Sys, class _Dimension>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
 typename enable_if
 <
     __is_unit<_ToUnit>::value,
     _ToUnit
 >::type
-floor(const __unit<_Sys, _Rep, _Dimension>& __u)
+floor(const __unit<_Rep, _Sys, _Dimension>& __u)
 {
     _ToUnit __t = unit_cast<_ToUnit>(__u);
     if (__t > __u)
@@ -163,14 +163,14 @@ floor(const __unit<_Sys, _Rep, _Dimension>& __u)
     return __t;
 }
 
-template <class _ToUnit, class _Sys, class _Rep, class _Dimension>
+template <class _ToUnit, class _Rep, class _Sys, class _Dimension>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
 typename enable_if
 <
     __is_unit<_ToUnit>::value,
     _ToUnit
 >::type
-ceil(const __unit<_Sys, _Rep, _Dimension>& __u)
+ceil(const __unit<_Rep, _Sys, _Dimension>& __u)
 {
     _ToUnit __t = unit_cast<_ToUnit>(__u);
     if (__t < __u)
@@ -178,14 +178,14 @@ ceil(const __unit<_Sys, _Rep, _Dimension>& __u)
     return __t;
 }
 
-template <class _ToUnit, class _Sys, class _Rep, class _Dimension>
+template <class _ToUnit, class _Rep, class _Sys, class _Dimension>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
 typename enable_if
 <
     __is_unit<_ToUnit>::value,
     _ToUnit
 >::type
-round(const __unit<_Sys, _Rep, _Dimension>& __u)
+round(const __unit<_Rep, _Sys, _Dimension>& __u)
 {
     _ToUnit __lower = floor<_ToUnit>(__u);
     _ToUnit __upper = __lower + _ToUnit{1};
@@ -201,7 +201,7 @@ round(const __unit<_Sys, _Rep, _Dimension>& __u)
 
 // unit
 
-template <class _Sys, class _Rep, class _Dimension>
+template <class _Rep, class _Sys, class _Dimension>
 class _LIBCPP_TEMPLATE_VIS __unit
 {
     static_assert(!__is_unit<_Rep>::value, "A unit representation can not be a unit");
@@ -265,9 +265,9 @@ public:
                 : __rep_(__r) {}
 
     // conversions
-    template <class _Sys2, class _Rep2, class _Dimension2>
+    template <class _Rep2, class _Sys2, class _Dimension2>
         _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-        __unit(const __unit<_Sys2, _Rep2, _Dimension2>& __u,
+        __unit(const __unit<_Rep2, _Sys2, _Dimension2>& __u,
             typename enable_if
             <
                 __no_overflow<_Dimension2, dimension>::value && (
@@ -334,9 +334,9 @@ template <class _Sys, class _Rep1, class _Dimension1, class _Rep2, class _Dimens
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 bool
-operator==(const __unit<_Sys, _Rep1, _Dimension1>& __lhs, const __unit<_Sys, _Rep2, _Dimension2>& __rhs)
+operator==(const __unit<_Rep1, _Sys, _Dimension1>& __lhs, const __unit<_Rep2, _Sys, _Dimension2>& __rhs)
 {
-    return __unit_eq<__unit<_Sys, _Rep1, _Dimension1>, __unit<_Sys, _Rep2, _Dimension2> >()(__lhs, __rhs);
+    return __unit_eq<__unit<_Rep1, _Sys, _Dimension1>, __unit<_Rep2, _Sys, _Dimension2> >()(__lhs, __rhs);
 }
 
 // Comparing wto units of the same system works by casting left and right arguments to their common type
@@ -346,22 +346,22 @@ operator==(const __unit<_Sys, _Rep1, _Dimension1>& __lhs, const __unit<_Sys, _Re
 
 // TODO: Check if we can move some calculation to compile time by using a common type that would use the ratio between two systems.
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 bool
-operator==(const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
+operator==(const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _Sys2, _Dimension2>& __rhs)
 {
-    return __lhs == unit_cast<__unit<_Sys1, _Rep1, _Dimension1> >(__rhs);
+    return __lhs == unit_cast<__unit<_Rep1, _Sys1, _Dimension1> >(__rhs);
 }
 
 // Unit !=
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 bool
-operator!=(const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
+operator!=(const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _Sys2, _Dimension2>& __rhs)
 {
     return !(__lhs == __rhs);
 }
@@ -387,69 +387,69 @@ struct __unit_lt<_LhsDuration, _LhsDuration>
         {return __lhs.count() < __rhs.count();}
 };
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 bool
-operator< (const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
+operator< (const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _Sys2, _Dimension2>& __rhs)
 {
-    return __unit_lt<__unit<_Sys1, _Rep1, _Dimension1>, __unit<_Sys2, _Rep2, _Dimension2> >()(__lhs, __rhs);
+    return __unit_lt<__unit<_Rep1, _Sys1, _Dimension1>, __unit<_Rep2, _Sys2, _Dimension2> >()(__lhs, __rhs);
 }
 
 // Unit >
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 bool
-operator> (const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
+operator> (const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _Sys2, _Dimension2>& __rhs)
 {
     return __rhs < __lhs;
 }
 
 // Unit <=
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 bool
-operator<=(const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
+operator<=(const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _Sys2, _Dimension2>& __rhs)
 {
     return !(__rhs < __lhs);
 }
 
 // Unit >=
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 bool
-operator>=(const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
+operator>=(const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _Sys2, _Dimension2>& __rhs)
 {
     return !(__lhs < __rhs);
 }
 
 // Unit +
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
-typename common_type<__unit<_Sys1, _Rep1, _Dimension1>, __unit<_Sys2, _Rep2, _Dimension2> >::type
-operator+(const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
+typename common_type<__unit<_Rep1, _Sys1, _Dimension1>, __unit<_Rep2, _Sys2, _Dimension2> >::type
+operator+(const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _Sys2, _Dimension2>& __rhs)
 {
-    typedef typename common_type<__unit<_Sys1, _Rep1, _Dimension1>, __unit<_Sys2, _Rep2, _Dimension2> >::type _Cd;
+    typedef typename common_type<__unit<_Rep1, _Sys1, _Dimension1>, __unit<_Rep2, _Sys2, _Dimension2> >::type _Cd;
     return _Cd(_Cd(__lhs).count() + _Cd(__rhs).count());
 }
 
 // Unit -
 
-template <class _Sys1, class _Rep1, class _Dimension1, class _Sys2, class _Rep2, class _Dimension2>
+template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
-typename common_type<__unit<_Sys1, _Rep1, _Dimension1>, __unit<_Sys2, _Rep2, _Dimension2> >::type
-operator-(const __unit<_Sys1, _Rep1, _Dimension1>& __lhs, const __unit<_Sys2, _Rep2, _Dimension2>& __rhs)
+typename common_type<__unit<_Rep1, _Sys1, _Dimension1>, __unit<_Rep2, _Sys2, _Dimension2> >::type
+operator-(const __unit<_Rep1, _Sys1, _Dimension1>& __lhs, const __unit<_Rep2, _Sys2, _Dimension2>& __rhs)
 {
-    typedef typename common_type<__unit<_Sys1, _Rep1, _Dimension1>, __unit<_Sys2, _Rep2, _Dimension2> >::type _Cd;
+    typedef typename common_type<__unit<_Rep1, _Sys1, _Dimension1>, __unit<_Rep2, _Sys2, _Dimension2> >::type _Cd;
     return _Cd(_Cd(__lhs).count() - _Cd(__rhs).count());
 }
 
@@ -463,7 +463,7 @@ typename enable_if
     is_convertible<_Rep2, typename common_type<_Rep1, _Rep2>::type>::value,
     __unit<typename common_type<_Rep1, _Rep2>::type, _Dimension>
 >::type
-operator*(const __unit<_Sys, _Rep1, _Dimension>& __u, const _Rep2& __s)
+operator*(const __unit<_Rep1, _Sys, _Dimension>& __u, const _Rep2& __s)
 {
     typedef typename common_type<_Rep1, _Rep2>::type _Cr;
     typedef __unit<_Sys, _Cr, _Dimension> _Cd;
@@ -478,7 +478,7 @@ typename enable_if
     is_convertible<_Rep1, typename common_type<_Rep1, _Rep2>::type>::value,
     __unit<typename common_type<_Rep1, _Rep2>::type, _Dimension>
 >::type
-operator*(const _Rep1& __s, const __unit<_Sys, _Rep2, _Dimension>& __u)
+operator*(const _Rep1& __s, const __unit<_Rep2, _Sys, _Dimension>& __u)
 {
     return __u * __s;
 }
@@ -498,22 +498,22 @@ struct __unit_divide_imp
 };
 
 template <class _Sys, class _Rep1, class _Dimension, class _Rep2>
-struct __unit_divide_imp<__unit<_Sys, _Rep1, _Dimension>, _Rep2, true>
+struct __unit_divide_imp<__unit<_Rep1, _Sys, _Dimension>, _Rep2, true>
 {
     typedef __unit<_Sys, typename common_type<_Rep1, _Rep2>::type, _Dimension> type;
 };
 
 template <class _Sys, class _Rep1, class _Dimension, class _Rep2>
-struct __unit_divide_result<__unit<_Sys, _Rep1, _Dimension>, _Rep2, false>
-    : __unit_divide_imp<__unit<_Sys, _Rep1, _Dimension>, _Rep2>
+struct __unit_divide_result<__unit<_Rep1, _Sys, _Dimension>, _Rep2, false>
+    : __unit_divide_imp<__unit<_Rep1, _Sys, _Dimension>, _Rep2>
 {
 };
 
 template <class _Sys, class _Rep1, class _Dimension, class _Rep2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
-typename __unit_divide_result<__unit<_Sys, _Rep1, _Dimension>, _Rep2>::type
-operator/(const __unit<_Sys, _Rep1, _Dimension>& __u, const _Rep2& __s)
+typename __unit_divide_result<__unit<_Rep1, _Sys, _Dimension>, _Rep2>::type
+operator/(const __unit<_Rep1, _Sys, _Dimension>& __u, const _Rep2& __s)
 {
     typedef typename common_type<_Rep1, _Rep2>::type _Cr;
     typedef __unit<_Sys, _Cr, _Dimension> _Cd;
@@ -524,9 +524,9 @@ template <class _Sys, class _Rep1, class _Dimension1, class _Rep2, class _Dimens
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
 typename common_type<_Rep1, _Rep2>::type
-operator/(const __unit<_Sys, _Rep1, _Dimension1>& __lhs, const __unit<_Sys, _Rep2, _Dimension2>& __rhs)
+operator/(const __unit<_Rep1, _Sys, _Dimension1>& __lhs, const __unit<_Rep1, _Sys, _Dimension2>& __rhs)
 {
-    typedef typename common_type<__unit<_Sys, _Rep1, _Dimension1>, __unit<_Sys, _Rep2, _Dimension2> >::type _Ct;
+    typedef typename common_type<__unit<_Rep1, _Sys, _Dimension1>, __unit<_Rep1, _Sys, _Dimension2> >::type _Ct;
     return _Ct(__lhs).count() / _Ct(__rhs).count();
 }
 
@@ -535,8 +535,8 @@ operator/(const __unit<_Sys, _Rep1, _Dimension1>& __lhs, const __unit<_Sys, _Rep
 template <class _Sys, class _Rep1, class _Dimension, class _Rep2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
-typename __unit_divide_result<__unit<_Sys, _Rep1, _Dimension>, _Rep2>::type
-operator%(const __unit<_Sys, _Rep1, _Dimension>& __u, const _Rep2& __s)
+typename __unit_divide_result<__unit<_Rep1, _Sys, _Dimension>, _Rep2>::type
+operator%(const __unit<_Rep1, _Sys, _Dimension>& __u, const _Rep2& __s)
 {
     typedef typename common_type<_Rep1, _Rep2>::type _Cr;
     typedef __unit<_Sys, _Cr, _Dimension> _Cd;
@@ -546,11 +546,11 @@ operator%(const __unit<_Sys, _Rep1, _Dimension>& __u, const _Rep2& __s)
 template <class _Sys, class _Rep1, class _Dimension1, class _Rep2, class _Dimension2>
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_CONSTEXPR
-typename common_type<__unit<_Sys, _Rep1, _Dimension1>, __unit<_Sys, _Rep2, _Dimension2> >::type
-operator%(const __unit<_Sys, _Rep1, _Dimension1>& __lhs, const __unit<_Sys, _Rep2, _Dimension2>& __rhs)
+typename common_type<__unit<_Rep1, _Sys, _Dimension1>, __unit<_Rep2, _Sys, _Dimension2> >::type
+operator%(const __unit<_Rep1, _Sys, _Dimension1>& __lhs, const __unit<_Rep2, _Sys, _Dimension2>& __rhs)
 {
     typedef typename common_type<_Rep1, _Rep2>::type _Cr;
-    typedef typename common_type<__unit<_Sys, _Rep1, _Dimension1>, __unit<_Sys, _Rep2, _Dimension2> >::type _Cd;
+    typedef typename common_type<__unit<_Rep1, _Sys, _Dimension1>, __unit<_Rep2, _Sys, _Dimension2> >::type _Cd;
     return _Cd(static_cast<_Cr>(_Cd(__lhs).count()) % static_cast<_Cr>(_Cd(__rhs).count()));
 }
 
