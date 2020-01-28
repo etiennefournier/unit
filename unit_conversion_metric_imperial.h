@@ -20,14 +20,15 @@
 
 namespace unit
 {
-    template<auto _FromValue, class _FromType, auto _ToValue, class _ToType>
+    template<intmax_t _Num, class _FromType, intmax_t _Den, class _ToType>
     struct conversion_helper
     {
-        typedef _FromType fromReferenceType;
-        typedef _ToType toReferenceType;
+        private:
+        typedef std::ratio<_Num, _Den> dimension;
 
-        static _LIBCPP_CONSTEXPR const auto fromValue = _FromValue;
-        static _LIBCPP_CONSTEXPR const auto toValue = _ToValue;
+        public:
+        static _LIBCPP_CONSTEXPR const intmax_t num = dimension::num;
+        static _LIBCPP_CONSTEXPR const intmax_t den = dimension::den;
 
         typedef typename common_type<typename _FromType::rep, typename _ToType::rep>::type _Cr;
 
@@ -51,7 +52,7 @@ struct __unit_cast<__unit<_RepFrom, metric_trait, _DimensionFrom>, __unit<_RepTo
         typedef typename common_type<_RepFrom, _RepTo>::type _Cr;
 
         const auto refUnitFrom = unit_cast<imperial_to_metric::to_ref_type<_Cr>>(__fu);
-        const auto refUnitTo   = imperial_to_metric::from_ref_type<_Cr>{refUnitFrom.count() * imperial_to_metric::fromValue / imperial_to_metric::toValue};
+        const auto refUnitTo   = imperial_to_metric::from_ref_type<_Cr>{refUnitFrom.count() * imperial_to_metric::num / imperial_to_metric::den};
 
         return unit_cast<__unit<_RepTo, imperial_trait, _DimensionTo> >(refUnitTo);
     }
@@ -66,7 +67,7 @@ struct __unit_cast<__unit<_RepFrom, imperial_trait, _DimensionFrom>, __unit<_Rep
         typedef typename common_type<_RepFrom, _RepTo>::type _Cr;
 
         const auto refUnitFrom = unit_cast<imperial_to_metric::from_ref_type<_Cr>>(__fu);
-        const auto refUnitTo   = imperial_to_metric::to_ref_type<_Cr>{refUnitFrom.count() * imperial_to_metric::toValue / imperial_to_metric::fromValue};
+        const auto refUnitTo   = imperial_to_metric::to_ref_type<_Cr>{refUnitFrom.count() * imperial_to_metric::den / imperial_to_metric::num};
 
         return unit_cast<__unit<_RepTo, metric_trait, _DimensionTo> >(refUnitTo);
     }
