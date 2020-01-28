@@ -5,7 +5,7 @@
 using namespace unit;
 // using namespace std::unit;
 
-TEST(metric, Creation)
+TEST(metric, Construction)
 {
     meters m1{1};
     EXPECT_EQ(m1.count(), 1LL);

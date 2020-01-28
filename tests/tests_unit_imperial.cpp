@@ -5,7 +5,7 @@
 using namespace unit;
 // using namespace std::unit;
 
-TEST(imperial, Creation)
+TEST(imperial, Construction)
 {
     yards y1{1};
     EXPECT_EQ(y1.count(), 1LL);
