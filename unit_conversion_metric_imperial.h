@@ -20,16 +20,28 @@
 
 namespace unit
 {
-using thous_in_micrometers = ratio<5, 127>;
+    template<auto _FromValue, class _FromType, auto _ToValue, class _ToType>
+    struct conversion_helper
+    {
+        typedef _FromType fromReferenceType;
+        typedef _ToType toReferenceType;
 
-template<class _Rep>
-using metric_ref_type = __unit<_Rep, micrometers::system, micrometers::dimension>;
+        static _LIBCPP_CONSTEXPR const auto fromValue = _FromValue;
+        static _LIBCPP_CONSTEXPR const auto toValue = _ToValue;
 
-template<class _Rep>
-using imperial_ref_type = __unit<_Rep, thous::system, thous::dimension>;
+        typedef typename common_type<typename _FromType::rep, typename _ToType::rep>::type _Cr;
+
+        template<class _Rep>
+        using from_ref_type = __unit<_Rep, typename _FromType::system, typename _FromType::dimension>;
+
+        template<class _Rep>
+        using to_ref_type = __unit<_Rep, typename _ToType::system, typename _ToType::dimension>;
+    };
+
+using imperial_to_metric = conversion_helper<5, thous, 127, micrometers>;
 
 // TODO see what needs to be done to support other flavors of num and den equality (last 2 templated arguments).
-
+// Revisit typedefs in conversion helper
 template <class _RepFrom, class _DimensionFrom, class _RepTo, class _DimensionTo, class _Dimension>
 struct __unit_cast<__unit<_RepFrom, metric_trait, _DimensionFrom>, __unit<_RepTo, imperial_trait, _DimensionTo>, _Dimension, false, false>
 {
@@ -38,8 +50,8 @@ struct __unit_cast<__unit<_RepFrom, metric_trait, _DimensionFrom>, __unit<_RepTo
     {
         typedef typename common_type<_RepFrom, _RepTo>::type _Cr;
 
-        const auto refUnitFrom = unit_cast<metric_ref_type<_Cr>>(__fu);
-        const auto refUnitTo   = imperial_ref_type<_Cr>{refUnitFrom.count() * thous_in_micrometers::num / thous_in_micrometers::den};
+        const auto refUnitFrom = unit_cast<imperial_to_metric::to_ref_type<_Cr>>(__fu);
+        const auto refUnitTo   = imperial_to_metric::from_ref_type<_Cr>{refUnitFrom.count() * imperial_to_metric::fromValue / imperial_to_metric::toValue};
 
         return unit_cast<__unit<_RepTo, imperial_trait, _DimensionTo> >(refUnitTo);
     }
@@ -53,8 +65,8 @@ struct __unit_cast<__unit<_RepFrom, imperial_trait, _DimensionFrom>, __unit<_Rep
     {
         typedef typename common_type<_RepFrom, _RepTo>::type _Cr;
 
-        const auto refUnitFrom = unit_cast<imperial_ref_type<_Cr>>(__fu);
-        const auto refUnitTo   = metric_ref_type<_Cr>{refUnitFrom.count() * thous_in_micrometers::den / thous_in_micrometers::num};
+        const auto refUnitFrom = unit_cast<imperial_to_metric::from_ref_type<_Cr>>(__fu);
+        const auto refUnitTo   = imperial_to_metric::to_ref_type<_Cr>{refUnitFrom.count() * imperial_to_metric::toValue / imperial_to_metric::fromValue};
 
         return unit_cast<__unit<_RepTo, metric_trait, _DimensionTo> >(refUnitTo);
     }
