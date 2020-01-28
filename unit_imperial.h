@@ -32,7 +32,7 @@ namespace unit
 
     //aliases
     template<class _Rep, class _Dimension = ratio<1>>
-    using imperial_unit = __unit<imperial_trait, _Rep, _Dimension>;
+    using imperial_unit = __unit<_Rep, imperial_trait, _Dimension>;
 
     using yards    = imperial_unit<long long>;
 
