@@ -8,6 +8,7 @@ set(Sources
     tests_unit_imperial.cpp
     tests_unit_conversions.cpp
     tests_unit_chrono.cpp
+    tests_unit_speed.cpp
 )
 
 add_executable(${This} ${Sources})
