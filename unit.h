@@ -50,13 +50,22 @@ struct __is_unit<const volatile __unit<_Rep, _Sys, _Dimension> > : true_type  {}
 
 } // unit
 
+template <class _Sys, class _Rep1, class _Dimension1, class _Rep2, class _Dimension2>
+struct _LIBCPP_TEMPLATE_VIS common_type<unit::__unit<_Rep1, _Sys, _Dimension1>,
+                                         unit::__unit<_Rep2, _Sys, _Dimension2> >
+{
+    typedef unit::__unit<typename common_type<_Rep1, _Rep2>::type,
+                         _Sys,
+                         typename __ratio_gcd<_Dimension1, _Dimension2>::type> type;
+};
+
 template <class _Rep1, class _Sys1, class _Dimension1, class _Rep2, class _Sys2, class _Dimension2>
 struct _LIBCPP_TEMPLATE_VIS common_type<unit::__unit<_Rep1, _Sys1, _Dimension1>,
                                          unit::__unit<_Rep2, _Sys2, _Dimension2> >
 {
-    typedef unit::__unit<typename common_type<_Rep1, _Rep2>::type,
-                         _Sys1,
-                         typename __ratio_gcd<_Dimension1, _Dimension2>::type> type;
+    // typedef unit::__unit<typename common_type<_Rep1, _Rep2>::type,
+    //                      _Sys1,
+    //                      typename __ratio_gcd<_Dimension1, _Dimension2>::type> type;
 };
 
 namespace unit {
@@ -205,7 +214,7 @@ template <class _Rep, class _Sys, class _Dimension>
 class _LIBCPP_TEMPLATE_VIS __unit
 {
     static_assert(!__is_unit<_Rep>::value, "A unit representation can not be a unit");
-    static_assert(__is_ratio<_Dimension>::value, "Second template parameter of unit must be a std::ratio");
+    static_assert(__is_ratio<_Dimension>::value, "Third template parameter of __unit must be a std::ratio");
     static_assert(_Dimension::num > 0, "unit dimension must be positive");
 
     template <class _R1, class _R2>
@@ -239,8 +248,8 @@ class _LIBCPP_TEMPLATE_VIS __unit
     };
 
 public:
-    typedef _Sys system;
     typedef _Rep rep;
+    typedef _Sys system;
     typedef typename _Dimension::type dimension;
 private:
     rep __rep_;
@@ -250,7 +259,7 @@ public:
 #ifndef _LIBCPP_CXX03_LANG
         __unit() = default;
 #else
-        unit() {}
+        __unit() {}
 #endif
 
     template <class _Rep2>
@@ -339,7 +348,7 @@ operator==(const __unit<_Rep1, _Sys, _Dimension1>& __lhs, const __unit<_Rep2, _S
     return __unit_eq<__unit<_Rep1, _Sys, _Dimension1>, __unit<_Rep2, _Sys, _Dimension2> >()(__lhs, __rhs);
 }
 
-// Comparing wto units of the same system works by casting left and right arguments to their common type
+// Comparing two units of the same system works by casting left and right arguments to their common type
 // and comparing their count.
 // Comparison between two differents systems won't have a common type, hence the need to implement
 // the logic in the equality operator.
